@@ -14,11 +14,23 @@ export default function Home() {
   const [showOnlyReady, setShowOnlyReady] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:4000/aircraft')
-      .then(res => res.json())
-      .then(data => setAircraft(data))
-      .catch(err => console.error('Failed to fetch aircraft:', err));
+    const saved = localStorage.getItem('aircraftData');
+    if (saved) {
+      setAircraft(JSON.parse(saved));
+    } else {
+      setAircraft([
+        { id: 1, tailNumber: "N101UA", model: "Boeing 747", status: "available", location: { lat: 33.9416, lng: -118.4085 } },
+        { id: 2, tailNumber: "N320AA", model: "Airbus A320", status: "maintenance", location: { lat: 40.6413, lng: -73.7781 } },
+        { id: 3, tailNumber: "N777DL", model: "Boeing 777", status: "aog", location: { lat: 41.9742, lng: -87.9073 } },
+        { id: 4, tailNumber: "N789SW", model: "Boeing 737 MAX", status: "available", location: { lat: 29.9902, lng: -95.3368 } },
+        { id: 5, tailNumber: "N380BA", model: "Airbus A380", status: "maintenance", location: { lat: 25.7959, lng: -80.2870 } }
+      ]);
+    }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('aircraftData', JSON.stringify(aircraft));
+  }, [aircraft]);
 
   const filteredAircraft = aircraft.filter((plane) => {
     const matchesFilters =
@@ -29,33 +41,16 @@ export default function Home() {
     return showOnlyReady ? matchesFilters && isReady : matchesFilters;
   });
 
-  const handleStatusChange = async (tailNumber, newStatus) => {
-    const target = aircraft.find(p => p.tailNumber === tailNumber);
-    if (!target) return;
-
-    try {
-      const res = await fetch(`http://localhost:4000/aircraft/${target.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
-      });
-      if (!res.ok) throw new Error('Failed to update status');
-
-      const updatedPlane = await res.json();
-      const updated = aircraft.map(p =>
-        p.id === updatedPlane.id ? updatedPlane : p
-      );
-      setAircraft(updated);
-      setEditingTail(null);
-    } catch (err) {
-      console.error(err);
-      alert('Failed to update status on server');
-    }
+  const handleStatusChange = (tailNumber, newStatus) => {
+    const updated = aircraft.map((plane) =>
+      plane.tailNumber === tailNumber ? { ...plane, status: newStatus } : plane
+    );
+    setAircraft(updated);
+    setEditingTail(null);
   };
 
   return (
     <main className="min-h-screen bg-gray-100 p-6 font-sans">
-      {/* Header */}
       <div className="sticky top-0 z-10 bg-white shadow-sm p-4 mb-6 rounded-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-gray-200">
         <div>
           <h1 className="text-3xl font-extrabold text-gray-800 tracking-tight">Aircraft Dashboard</h1>
@@ -73,7 +68,6 @@ export default function Home() {
 
       <AircraftMap aircraft={aircraft} />
 
-      {/* Toggle */}
       <div className="flex justify-end mb-4">
         <button
           className={`px-4 py-2 text-sm font-medium rounded-md shadow-sm border transition
@@ -86,7 +80,6 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Filters */}
       <div className="grid sm:grid-cols-3 gap-4 mb-6">
         {['Tail Number', 'Model'].map((placeholder, i) => (
           <div key={i} className="relative">
@@ -115,7 +108,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Aircraft Cards */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredAircraft.map(plane => (
           <div
