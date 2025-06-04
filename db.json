@@ -4,7 +4,7 @@
       "id": "1",
       "tailNumber": "N101UA",
       "model": "Boeing 747",
-      "status": "aog",
+      "status": "available",
       "location": {
         "lat": 33.9416,
         "lng": -118.4085
