@@ -2,6 +2,8 @@
 
 [Vercel Deployment](https://gander-aircraft-dashboard-9vys72ly0.vercel.app/)
 
+link: https://gander-aircraft-dashboard-9vys72ly0.vercel.app/
+
 A single-page web application built with React and Next.js to monitor and manage aircraft readiness. This project was developed as part of the Gander Internship take-home assignment.
 
 ## Features
