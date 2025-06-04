@@ -5,6 +5,14 @@ import dynamic from 'next/dynamic';
 
 const AircraftMap = dynamic(() => import('../components/AircraftMap'), { ssr: false });
 
+const defaultAircraft = [
+  { id: 1, tailNumber: "N101UA", model: "Boeing 747", status: "available", location: { lat: 33.9416, lng: -118.4085 } },
+  { id: 2, tailNumber: "N320AA", model: "Airbus A320", status: "maintenance", location: { lat: 40.6413, lng: -73.7781 } },
+  { id: 3, tailNumber: "N777DL", model: "Boeing 777", status: "aog", location: { lat: 41.9742, lng: -87.9073 } },
+  { id: 4, tailNumber: "N789SW", model: "Boeing 737 MAX", status: "available", location: { lat: 29.9902, lng: -95.3368 } },
+  { id: 5, tailNumber: "N380BA", model: "Airbus A380", status: "maintenance", location: { lat: 25.7959, lng: -80.2870 } }
+];
+
 export default function Home() {
   const [aircraft, setAircraft] = useState([]);
   const [tailFilter, setTailFilter] = useState('');
@@ -14,22 +22,28 @@ export default function Home() {
   const [showOnlyReady, setShowOnlyReady] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem('aircraftData');
-    if (saved) {
-      setAircraft(JSON.parse(saved));
-    } else {
-      setAircraft([
-        { id: 1, tailNumber: "N101UA", model: "Boeing 747", status: "available", location: { lat: 33.9416, lng: -118.4085 } },
-        { id: 2, tailNumber: "N320AA", model: "Airbus A320", status: "maintenance", location: { lat: 40.6413, lng: -73.7781 } },
-        { id: 3, tailNumber: "N777DL", model: "Boeing 777", status: "aog", location: { lat: 41.9742, lng: -87.9073 } },
-        { id: 4, tailNumber: "N789SW", model: "Boeing 737 MAX", status: "available", location: { lat: 29.9902, lng: -95.3368 } },
-        { id: 5, tailNumber: "N380BA", model: "Airbus A380", status: "maintenance", location: { lat: 25.7959, lng: -80.2870 } }
-      ]);
+    try {
+      const saved = typeof window !== 'undefined' && localStorage.getItem('aircraftData');
+      if (saved) {
+        setAircraft(JSON.parse(saved));
+      } else {
+        setAircraft(defaultAircraft);
+        localStorage.setItem('aircraftData', JSON.stringify(defaultAircraft));
+      }
+    } catch (err) {
+      console.error('Failed to load aircraft from localStorage:', err);
+      setAircraft(defaultAircraft);
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('aircraftData', JSON.stringify(aircraft));
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('aircraftData', JSON.stringify(aircraft));
+      }
+    } catch (err) {
+      console.error('Failed to save aircraft to localStorage:', err);
+    }
   }, [aircraft]);
 
   const filteredAircraft = aircraft.filter((plane) => {
