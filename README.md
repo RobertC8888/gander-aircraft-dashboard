@@ -4,7 +4,7 @@
 
 link: https://gander-aircraft-dashboard-9vys72ly0.vercel.app/
 
-A single-page web application built with React and Next.js to monitor and manage aircraft readiness. This project was developed as part of the Gander Internship take-home assignment. To update status, click on plane module.
+A single-page web application built with React and Next.js to monitor and manage aircraft readiness. This project was developed as part of the Gander Internship take-home assignment. 
 
 ## Features
 
@@ -12,6 +12,7 @@ A single-page web application built with React and Next.js to monitor and manage
 - Filter aircraft by tail number, model, and readiness status
 - Edit and update aircraft readiness status
 - Persist changes using a mock backend (`json-server`) or localStorage
+- Status update by clicking on specified plane
 
 ## Tech Stack
 
