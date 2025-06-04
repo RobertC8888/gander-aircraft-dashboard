@@ -17,45 +17,39 @@ A single-page web application built with React and Next.js to monitor and manage
 - json-server (mock backend)
 - Leaflet and React-Leaflet (interactive map)
 
+
 ## Installation and Setup
 
 Follow these steps to set up and run the project locally:
 
-### 1. Clone the repository
 
-```bash
-git clone https://github.com/YOUR_USERNAME/gander-aircraft-dashboard.git
-cd gander-aircraft-dashboard
-```
+### 1. Install dependencies
 
-### 2. Install dependencies
-
-```bash
 npm install
-```
 
-### 3. Start the development server
 
-```bash
+### 3. Start the dev server
+
 npm run dev
-```
 
 The app will be available at:  
-[http://localhost:3000](http://localhost:3000)
+http://localhost:3000
+
+
 
 ### 4. (Optional) Start the backend server
 
-```bash
 npm run backend
-```
 
 This runs `json-server` at:  
-[http://localhost:4000/aircraft](http://localhost:4000/aircraft)
+http://localhost:4000/aircraft
+
 
 > If you're using localStorage for persistence only, this step is optional.
+
 
 ## Notes
 
 - On first load, data is fetched from `db.json` (via `json-server`) if the backend is running.
 - If not, the app defaults to localStorage for data persistence.
-- Any changes to aircraft status will persist across refreshes.
+- Changes to aircraft status will persist across refreshes.
