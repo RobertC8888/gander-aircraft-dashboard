@@ -5,14 +5,6 @@ import dynamic from 'next/dynamic';
 
 const AircraftMap = dynamic(() => import('../components/AircraftMap'), { ssr: false });
 
-const defaultAircraft = [
-  { id: 1, tailNumber: "N101UA", model: "Boeing 747", status: "available", location: { lat: 33.9416, lng: -118.4085 } },
-  { id: 2, tailNumber: "N320AA", model: "Airbus A320", status: "maintenance", location: { lat: 40.6413, lng: -73.7781 } },
-  { id: 3, tailNumber: "N777DL", model: "Boeing 777", status: "aog", location: { lat: 41.9742, lng: -87.9073 } },
-  { id: 4, tailNumber: "N789SW", model: "Boeing 737 MAX", status: "available", location: { lat: 29.9902, lng: -95.3368 } },
-  { id: 5, tailNumber: "N380BA", model: "Airbus A380", status: "maintenance", location: { lat: 25.7959, lng: -80.2870 } }
-];
-
 export default function Home() {
   const [aircraft, setAircraft] = useState([]);
   const [tailFilter, setTailFilter] = useState('');
@@ -21,29 +13,26 @@ export default function Home() {
   const [editingTail, setEditingTail] = useState(null);
   const [showOnlyReady, setShowOnlyReady] = useState(false);
 
+  const initialAircraft = [
+    { id: 1, tailNumber: "TN1", model: "Boeing 747", status: "available", location: { lat: 34.0000, lng: -118.0000 } },
+    { id: 2, tailNumber: "TN2", model: "Airbus A320", status: "maintenance", location: { lat: 41.0000, lng: -74.0000 } },
+    { id: 3, tailNumber: "TN3", model: "Boeing 777", status: "aog", location: { lat: 42.0000, lng: -88.0000 } },
+    { id: 4, tailNumber: "TN4", model: "Boeing 737 MAX", status: "available", location: { lat: 30.0000, lng: -95.0000 } },
+    { id: 5, tailNumber: "TN5", model: "Airbus A380", status: "maintenance", location: { lat: 26.0000, lng: -80.0000 } }
+  ];
+
   useEffect(() => {
-    try {
-      const saved = typeof window !== 'undefined' && localStorage.getItem('aircraftData');
-      if (saved) {
-        setAircraft(JSON.parse(saved));
-      } else {
-        setAircraft(defaultAircraft);
-        localStorage.setItem('aircraftData', JSON.stringify(defaultAircraft));
-      }
-    } catch (err) {
-      console.error('Failed to load aircraft from localStorage:', err);
-      setAircraft(defaultAircraft);
+    const saved = localStorage.getItem('aircraftData');
+    if (saved) {
+      setAircraft(JSON.parse(saved));
+    } else {
+      localStorage.setItem('aircraftData', JSON.stringify(initialAircraft));
+      setAircraft(initialAircraft);
     }
   }, []);
 
   useEffect(() => {
-    try {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('aircraftData', JSON.stringify(aircraft));
-      }
-    } catch (err) {
-      console.error('Failed to save aircraft to localStorage:', err);
-    }
+    localStorage.setItem('aircraftData', JSON.stringify(aircraft));
   }, [aircraft]);
 
   const filteredAircraft = aircraft.filter((plane) => {
@@ -143,7 +132,7 @@ export default function Home() {
             </div>
             <div className="space-y-1 text-sm text-gray-600">
               <p><span className="font-medium text-gray-700">Model:</span> {plane.model}</p>
-              <p><span className="font-medium text-gray-700">Location:</span> {plane.location.lat}, {plane.location.lng}</p>
+              <p><span className="font-medium text-gray-700">Location:</span> {plane.location.lat.toFixed(4)}, {plane.location.lng.toFixed(4)}</p>
             </div>
 
             {editingTail === plane.tailNumber && (
