@@ -14,7 +14,7 @@
       "id": "2",
       "tailNumber": "N320AA",
       "model": "Airbus A320",
-      "status": "maintenance",
+      "status": "aog",
       "location": {
         "lat": 40.6413,
         "lng": -73.7781
